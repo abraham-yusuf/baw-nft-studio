@@ -26,7 +26,7 @@
         </div>
         <div>
           <div class="flex items-center space-x-2">
-            <span class="font-bold text-lg text-white">Dompet Agentif</span>
+            <span class="font-bold text-lg text-white">Agentic Wallet</span>
             <span class="text-xs px-2 py-0.5 rounded bg-[#f0b90b]/20 text-[#f0b90b] font-medium border border-[#f0b90b]/40">NFT Studio</span>
           </div>
           <p class="text-xs text-[#848e9c]">Binance Agentic Wallet &bull; BNB Smart Chain</p>
@@ -58,7 +58,7 @@
         <div>
           <p class="text-xs font-medium text-[#848e9c] uppercase tracking-wider">Connected Address</p>
           <div class="flex items-center space-x-2 mt-1">
-            <span id="wallet-address" class="font-mono text-sm sm:text-base text-white font-semibold">Memuat alamat...</span>
+            <span id="wallet-address" class="font-mono text-sm sm:text-base text-white font-semibold">Loading address...</span>
             <button onclick="copyAddress()" title="Copy" class="text-[#848e9c] hover:text-[#f0b90b]">
               <i class="fa-regular fa-copy"></i>
             </button>
@@ -68,7 +68,7 @@
               <i class="fa-solid fa-shield-halved text-[10px]"></i> Developer Mode: Active
             </span>
             <span id="nft-total-badge" class="text-xs px-2.5 py-1 rounded bg-[#2b313a] text-white font-medium">
-              Total NFTs: 50
+              Total NFTs: 0
             </span>
             <span class="text-xs px-2.5 py-1 rounded bg-[#2b313a] text-[#848e9c] font-medium">
               Chain: BSC (56)
@@ -78,13 +78,13 @@
 
         <div class="flex items-center gap-4 bg-[#0b0e11]/60 p-4 rounded-xl border border-[#2b313a]">
           <div>
-            <p class="text-xs text-[#848e9c]">Perkiraan Nilai Koleksi</p>
-            <p class="text-xl font-bold text-white mt-0.5"><span class="binance-yellow">50</span> <span class="text-xs text-[#848e9c] font-normal">Items on BSC</span></p>
+            <p class="text-xs text-[#848e9c]">Estimated Portfolio Size</p>
+            <p class="text-xl font-bold text-white mt-0.5"><span id="nft-count-stat" class="binance-yellow">0</span> <span class="text-xs text-[#848e9c] font-normal">Items on BSC</span></p>
           </div>
           <div class="h-8 w-[1px] bg-[#2b313a]"></div>
           <div>
-            <p class="text-xs text-[#848e9c]">Status Agent ID</p>
-            <p class="text-sm font-bold text-green-400 mt-1 flex items-center gap-1">
+            <p class="text-xs text-[#848e9c]">Agent ID Status</p>
+            <p id="agent-status-text" class="text-sm font-bold text-green-400 mt-1 flex items-center gap-1">
               <i class="fa-solid fa-circle-check"></i> Claimed & Bound
             </p>
           </div>
@@ -95,7 +95,7 @@
     <!-- Navigation Tabs (Binance Style) -->
     <div class="flex border-b border-[#2b313a] mb-6 space-x-8 text-sm font-semibold">
       <button onclick="switchTab('nfts')" id="tab-nfts" class="pb-3 binance-tab-active flex items-center gap-2">
-        <i class="fa-solid fa-shapes"></i> NFT Koleksi (50)
+        <i class="fa-solid fa-shapes"></i> NFT Inventory (<span id="tab-nft-count">0</span>)
       </button>
       <button onclick="switchTab('mint')" id="tab-mint" class="pb-3 text-[#848e9c] hover:text-white flex items-center gap-2">
         <i class="fa-solid fa-bolt"></i> Auto Free Mint Radar
@@ -109,10 +109,10 @@
     <div id="section-nfts" class="space-y-4">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div class="relative w-full sm:w-72">
-          <input type="text" id="search-input" onkeyup="filterNFTs()" placeholder="Cari nama atau simbol NFT..." class="w-full bg-[#181a20] border border-[#2b313a] rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-[#848e9c] focus:outline-none focus:border-[#f0b90b]">
+          <input type="text" id="search-input" onkeyup="filterNFTs()" placeholder="Search by name or symbol..." class="w-full bg-[#181a20] border border-[#2b313a] rounded-lg pl-9 pr-3 py-2 text-xs text-white placeholder-[#848e9c] focus:outline-none focus:border-[#f0b90b]">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-[#848e9c] text-xs"></i>
         </div>
-        <p class="text-xs text-[#848e9c]">Menampilkan semua NFT yang tercetak via Binance Agentic Wallet</p>
+        <p class="text-xs text-[#848e9c]">Displaying on-chain NFTs held in your Binance Agentic Wallet</p>
       </div>
 
       <!-- NFT Grid -->
@@ -129,7 +129,7 @@
             <h3 class="text-base font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-radar text-[#f0b90b]"></i> Live Free Mint & Launchpad Radar (BSC)
             </h3>
-            <p class="text-xs text-[#848e9c]">Deteksi otomatis kontrak NFT free-mint yang kompatibel dengan BAW</p>
+            <p class="text-xs text-[#848e9c]">Autonomous detection of active free-mint NFT contracts compatible with BAW</p>
           </div>
           <span class="text-xs px-2.5 py-1 bg-green-500/10 text-green-400 rounded-full font-medium">
             Active Scanner
@@ -140,11 +140,11 @@
           <table class="w-full text-left text-xs">
             <thead class="text-[#848e9c] border-b border-[#2b313a] uppercase">
               <tr>
-                <th class="py-3 px-3">Koleksi</th>
-                <th class="py-3 px-3">Tipe</th>
+                <th class="py-3 px-3">Collection</th>
+                <th class="py-3 px-3">Type</th>
                 <th class="py-3 px-3">Price</th>
-                <th class="py-3 px-3">Syarat</th>
-                <th class="py-3 px-3 text-right">Aksi</th>
+                <th class="py-3 px-3">Requirement</th>
+                <th class="py-3 px-3 text-right">Action</th>
               </tr>
             </thead>
             <tbody id="mint-list" class="divide-y divide-[#2b313a]">
@@ -163,7 +163,7 @@
                 <td class="py-3.5 px-3 text-green-400 font-bold">FREE ($0)</td>
                 <td class="py-3.5 px-3"><span class="px-2 py-0.5 rounded bg-[#f0b90b]/20 text-[#f0b90b]">agentika.ai</span></td>
                 <td class="py-3.5 px-3 text-right">
-                  <span class="text-xs text-green-400 font-medium"><i class="fa-solid fa-check"></i> Sudah Diklaim</span>
+                  <span class="text-xs text-green-400 font-medium"><i class="fa-solid fa-check"></i> Claimed</span>
                 </td>
               </tr>
             </tbody>
@@ -179,23 +179,23 @@
           <i class="fa-solid fa-file-signature text-[#f0b90b]"></i> Gasless Marketplace Listing (EIP-712)
         </h3>
         <p class="text-xs text-[#848e9c] mb-6">
-          BAW mendukung tanda tangan off-chain EIP-712 melalui <code>baw sign-message</code>. Anda dapat melisting NFT untuk dijual di PancakeSwap / Seaport / Element Market secara gratis ($0 gas fee).
+          BAW supports off-chain EIP-712 order signing via <code>baw sign-message</code>. List your NFTs for sale on PancakeSwap / Seaport / Element Market with zero network gas fees ($0 gas).
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="space-y-4">
             <div>
-              <label class="block text-xs font-semibold text-[#848e9c] mb-1">PILIH NFT UNTUK DIJUAL</label>
+              <label class="block text-xs font-semibold text-[#848e9c] mb-1">SELECT NFT TO LIST</label>
               <select id="listing-nft-select" class="w-full bg-[#0b0e11] border border-[#2b313a] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#f0b90b]">
                 <!-- Options populated dynamically -->
               </select>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-[#848e9c] mb-1">HARGA JUAL (BNB)</label>
+              <label class="block text-xs font-semibold text-[#848e9c] mb-1">LISTING PRICE (BNB)</label>
               <input type="number" id="listing-price" placeholder="0.05" step="0.01" class="w-full bg-[#0b0e11] border border-[#2b313a] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#f0b90b]">
             </div>
             <div>
-              <label class="block text-xs font-semibold text-[#848e9c] mb-1">MARKETPLACE TUJUAN</label>
+              <label class="block text-xs font-semibold text-[#848e9c] mb-1">TARGET MARKETPLACE</label>
               <select class="w-full bg-[#0b0e11] border border-[#2b313a] rounded-lg p-2.5 text-xs text-white">
                 <option>PancakeSwap NFT Marketplace V3</option>
                 <option>Element Market (BSC)</option>
@@ -209,7 +209,7 @@
 
           <div class="bg-[#0b0e11] p-4 rounded-xl border border-[#2b313a]">
             <p class="text-xs font-bold text-[#848e9c] uppercase mb-2">Generated EIP-712 Order Signature Payload</p>
-            <pre id="payload-output" class="text-[11px] font-mono text-green-400 overflow-x-auto max-h-64 p-2 bg-black/40 rounded">Pilih NFT dan klik Generate di samping untuk memproses order listing...</pre>
+            <pre id="payload-output" class="text-[11px] font-mono text-green-400 overflow-x-auto max-h-64 p-2 bg-black/40 rounded">Select an NFT and click Generate to construct the listing payload...</pre>
           </div>
         </div>
       </div>
@@ -229,7 +229,7 @@
               Support & Donation
               <span class="text-[10px] px-2 py-0.5 rounded bg-[#f0b90b]/20 text-[#f0b90b] font-semibold border border-[#f0b90b]/40">agentika.ai</span>
             </h4>
-            <p class="text-xs text-[#848e9c] mt-0.5">Dukung pengembangan tools open-source ini melalui donasi crypto (BNB/BEP-20/ETH):</p>
+            <p class="text-xs text-[#848e9c] mt-0.5">Support the open-source development of this tool with crypto tips (BNB / BEP-20 / ETH):</p>
           </div>
         </div>
 
@@ -237,7 +237,7 @@
           <span class="font-mono text-xs text-[#eaecef] truncate max-w-[210px] sm:max-w-[260px]">0x0aDeb41281a8B10805f296529B5D3a042E65A370</span>
           <button onclick="copyDonationAddress()" id="donation-copy-btn" class="px-2.5 py-1 text-xs font-semibold rounded bg-[#f0b90b] text-black hover:bg-yellow-400 flex items-center gap-1 transition shrink-0">
             <i class="fa-regular fa-copy" id="donation-copy-icon"></i>
-            <span id="donation-copy-text">Salin</span>
+            <span id="donation-copy-text">Copy</span>
           </button>
         </div>
       </div>
@@ -272,7 +272,7 @@
 
         if (wRes.success && wRes.data) {
           currentWallet = wRes.data;
-          document.getElementById('wallet-address').innerText = currentWallet.address || 'Belum Terhubung (Jalankan baw auth signin)';
+          document.getElementById('wallet-address').innerText = currentWallet.address || 'Unconnected (Run "baw auth signin")';
           if (currentWallet.agentId?.claimed) {
             document.getElementById('agent-badge').classList.remove('hidden');
             document.getElementById('agent-handle').innerText = currentWallet.agentId.agentId;
@@ -282,7 +282,8 @@
         if (nRes.success && nRes.data) {
           allNFTs = nRes.data;
           document.getElementById('nft-total-badge').innerText = `Total NFTs: ${allNFTs.length}`;
-          document.getElementById('tab-nfts').innerHTML = `<i class="fa-solid fa-shapes"></i> NFT Koleksi (${allNFTs.length})`;
+          document.getElementById('nft-count-stat').innerText = allNFTs.length;
+          document.getElementById('tab-nft-count').innerText = allNFTs.length;
           renderGrid(allNFTs);
           populateListingSelect(allNFTs);
         }
@@ -294,7 +295,7 @@
     function renderGrid(nfts) {
       const grid = document.getElementById('nft-grid');
       if (nfts.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-12 text-center text-[#848e9c]">Tidak ada NFT yang ditemukan.</div>`;
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-[#848e9c]">No NFTs discovered yet. Sync on-chain to detect newly minted items.</div>`;
         return;
       }
 
@@ -317,11 +318,11 @@
                 <span class="text-[10px] font-mono text-[#848e9c]">#${nft.tokenId.length > 8 ? nft.tokenId.slice(0, 6) + '...' : nft.tokenId}</span>
               </div>
               <h4 class="font-bold text-sm text-white truncate" title="${nft.name}">${nft.name}</h4>
-              <p class="text-[11px] text-[#848e9c] line-clamp-2">${nft.description || 'NFT tercatat pada BNB Smart Chain.'}</p>
+              <p class="text-[11px] text-[#848e9c] line-clamp-2">${nft.description || 'NFT recorded on BNB Smart Chain.'}</p>
               
               <div class="pt-2 flex items-center justify-between border-t border-[#2b313a]">
                 <button onclick="openModal(${idx})" class="text-xs text-[#f0b90b] hover:underline font-medium">
-                  Detail & Transfer
+                  Details & Transfer
                 </button>
                 <a href="https://bscscan.com/token/${nft.contractAddress}?a=${nft.tokenId}" target="_blank" class="text-xs text-[#848e9c] hover:text-white">
                   <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -377,8 +378,8 @@
           </div>
 
           <div class="space-y-2">
-            <label class="block text-xs font-semibold text-[#848e9c]">TRANSFER KE ALAMAT LAIN</label>
-            <input type="text" id="transfer-to-input" placeholder="0x... Alamat Penerima BSC" class="w-full bg-[#0b0e11] border border-[#2b313a] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#f0b90b]">
+            <label class="block text-xs font-semibold text-[#848e9c]">TRANSFER TO ANOTHER ADDRESS</label>
+            <input type="text" id="transfer-to-input" placeholder="0x... Recipient BSC Address" class="w-full bg-[#0b0e11] border border-[#2b313a] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#f0b90b]">
             <button onclick="prepareTransfer('${nft.contractAddress}', '${nft.tokenId}')" class="w-full py-2 bg-[#f0b90b] text-black font-bold rounded-lg hover:bg-yellow-400 text-xs transition">
               Build Transfer Calldata
             </button>
@@ -399,12 +400,12 @@
     async function prepareTransfer(contract, tokenId) {
       const to = document.getElementById('transfer-to-input').value.trim();
       if (!to || !to.startsWith('0x')) {
-        alert('Masukkan alamat penerima yang valid!');
+        alert('Please enter a valid recipient address!');
         return;
       }
 
       const resBox = document.getElementById('transfer-result');
-      resBox.innerText = 'Menggenerate calldata...';
+      resBox.innerText = 'Generating calldata...';
       resBox.classList.remove('hidden');
 
       const res = await fetch('/api/build-transfer', {
@@ -415,8 +416,8 @@
       const data = await res.json();
       if (data.success) {
         resBox.innerHTML = `
-          <strong>Calldata dibuat:</strong><br>${data.calldata}<br><br>
-          <strong>Jalankan via BAW:</strong><br><code>${data.cliCommand}</code>
+          <strong>Calldata built:</strong><br>${data.calldata}<br><br>
+          <strong>Execute via BAW CLI:</strong><br><code>${data.cliCommand}</code>
         `;
       } else {
         resBox.innerText = 'Error: ' + data.error;
@@ -425,14 +426,14 @@
 
     function generateListingPayload() {
       if (!currentWallet?.address) {
-        alert("Wallet belum terhubung! Silakan login via 'baw auth signin'");
+        alert("Wallet unconnected! Please sign in via 'baw auth signin'");
         return;
       }
       const idx = document.getElementById('listing-nft-select').value;
       const price = document.getElementById('listing-price').value || '0.05';
       const nft = allNFTs[idx];
       if (!nft) {
-        alert("Pilih NFT yang ingin dijual!");
+        alert("Please select an NFT to list!");
         return;
       }
       const payload = {
@@ -505,7 +506,7 @@
     function copyAddress() {
       const addr = document.getElementById('wallet-address').innerText;
       navigator.clipboard.writeText(addr);
-      alert('Alamat wallet berhasil disalin!');
+      alert('Wallet address copied to clipboard!');
     }
 
     function copyDonationAddress() {
@@ -514,10 +515,10 @@
       const btnText = document.getElementById('donation-copy-text');
       const btnIcon = document.getElementById('donation-copy-icon');
       if (btnText && btnIcon) {
-        btnText.innerText = 'Tersalin! ✓';
+        btnText.innerText = 'Copied! ✓';
         btnIcon.className = 'fa-solid fa-check';
         setTimeout(() => {
-          btnText.innerText = 'Salin';
+          btnText.innerText = 'Copy';
           btnIcon.className = 'fa-regular fa-copy';
         }, 2000);
       }
